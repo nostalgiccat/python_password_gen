@@ -3,29 +3,22 @@ uppercase_letters = list(string.ascii_uppercase)
 lowercase_letters = list(string.ascii_lowercase)
 symbols = list(string.punctuation)
 
-def generate_password(password_length, uppercase, symbol):
+def generate_password(password_length, use_upper, use_symbols):
     new_password = ''
-    while len(new_password) < password_length:
-        rand_uppercase = random.choice(uppercase_letters)
-        rand_lowercase = random.choice(lowercase_letters)
-        rand_symbol = random.choice(symbols)
+    char_pool = [lowercase_letters]
 
-        if not uppercase and not symbol:
-            random_selection = 0
-        elif uppercase and not symbol:
-            random_selection = random.randint(0,1)
-        elif uppercase and symbol:
-            random_selection = random.randint(0,2)
+    if use_upper:
+        char_pool.append(uppercase_letters)
+    if use_symbols:
+        char_pool.append(symbols)
 
-        if random_selection == 0:
-            new_password += rand_lowercase
-        elif random_selection == 1:
-            new_password += rand_uppercase
-        elif random_selection == 2:
-            new_password += rand_symbol
+    new_password = ""
+
+    for _ in range(password_length):
+        selected_set = random.choice(char_pool)
+        new_password += random.choice(selected_set)
 
     return new_password
-
 
 def main():
     print("Welcome to the Password Generator!")
@@ -35,20 +28,15 @@ def main():
     except ValueError:
         print("Please enter a valid number")
 
-    uppercase = input("Do you want to use uppercase? (Y/N) ")
-    symbol = input("Do you want to use symbols? (Y/N) ")
-    if uppercase.lower() == 'y':
-        uppercase = True
-    else:
-        uppercase = False
-    if symbol.lower() == 'y':
-        symbol = True
-    else:
-        symbol = False
+    use_upper = input("Do you want to use uppercase? (Y/N) ")
+    use_symbols = input("Do you want to use symbols? (Y/N) ")
+
+    use_upper = use_upper.lower() == 'y'
+    use_symbols = use_symbols.lower() == 'y'
 
 
     # Call generate_password()
-    password = generate_password(password_length, uppercase, symbol)
+    password = generate_password(password_length, use_upper, use_symbols)
     print(f"Your generated password is: {password}")
 
 if __name__ == "__main__":
