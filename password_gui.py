@@ -8,6 +8,12 @@ root.geometry("400x300")
 use_upper_var = tk.BooleanVar()
 use_symbol_var = tk.BooleanVar()
 
+def copy_password():
+    password = display_password.cget("text")
+    root.clipboard_clear()
+    root.clipboard_append(password)
+    display_password.config(text="Password Copied!")
+
 def generate_password_gui():
     length_str = pass_length_entry.get().strip()
 
@@ -26,12 +32,14 @@ def generate_password_gui():
     password = generate_password(password_length, use_upper, use_symbols)
 
     # Show it in the label
-    display_password.config(text=f"Your new password is: {password}")
+    display_password.config(text=password)
 
 #Labels
-pass_length = tk.Label(root, text="Password Length: ")
+password_frame = tk.Frame(root)
+password_frame.pack()
+pass_length = tk.Label(password_frame, text="Password Length: ")
 pass_length.pack()
-pass_length_entry = tk.Entry(root)
+pass_length_entry = tk.Entry(password_frame)
 pass_length_entry.pack()
 
 uppercase_label = tk.Checkbutton(root, text="Include Uppercase", variable=use_upper_var)
@@ -40,12 +48,15 @@ uppercase_label.pack()
 symbol_label = tk.Checkbutton(root, text="Include Symbol", variable=use_symbol_var)
 symbol_label.pack()
 
-#Button
+tk.Label(root, text="Your new password:").pack()
+display_password = tk.Label(root, text="", font=("Helvetica", 14))
+display_password.pack(pady=10)
+
 generate_button = tk.Button(root, text="Generate Password", command=generate_password_gui)
 generate_button.pack()
 
-#Label
-display_password = tk.Label(root, text=f"Your new password is: ")
-display_password.pack()
+clipboard_button = tk.Button(root, text="Copy to Clipboard", command=copy_password)
+clipboard_button.pack()
+
 
 root.mainloop()
