@@ -2,8 +2,9 @@ import random, string
 uppercase_letters = list(string.ascii_uppercase)
 lowercase_letters = list(string.ascii_lowercase)
 symbols = list(string.punctuation)
+nums = list(string.digits)
 
-def generate_password(password_length, use_upper, use_symbols):
+def generate_password(password_length, use_upper, use_symbols, use_nums):
     new_password = ''
     char_pool = [lowercase_letters]
 
@@ -11,6 +12,8 @@ def generate_password(password_length, use_upper, use_symbols):
         char_pool.append(uppercase_letters)
     if use_symbols:
         char_pool.append(symbols)
+    if use_nums:
+        char_pool.append(nums)
 
     new_password = ""
 
@@ -30,13 +33,15 @@ def main():
 
     use_upper = input("Do you want to use uppercase? (Y/N) ")
     use_symbols = input("Do you want to use symbols? (Y/N) ")
+    use_nums = input("Do you want to use numbers? (Y/N)")
 
     use_upper = use_upper.lower() == 'y'
     use_symbols = use_symbols.lower() == 'y'
+    use_nums = use_nums.lower() == 'y'
 
 
     # Call generate_password()
-    password = generate_password(password_length, use_upper, use_symbols)
+    password = generate_password(password_length, use_upper, use_symbols, use_nums)
     print(f"Your generated password is: {password}")
 
 if __name__ == "__main__":

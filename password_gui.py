@@ -7,6 +7,7 @@ root.geometry("400x300")
 
 use_upper_var = tk.BooleanVar()
 use_symbol_var = tk.BooleanVar()
+use_nums_var = tk.BooleanVar()
 
 def copy_password():
     password = display_password.cget("text")
@@ -27,9 +28,10 @@ def generate_password_gui():
     # Get checkbox values
     use_upper = use_upper_var.get()
     use_symbols = use_symbol_var.get()
+    use_nums = use_nums_var.get()
 
     # Generate Password using imported function
-    password = generate_password(password_length, use_upper, use_symbols)
+    password = generate_password(password_length, use_upper, use_symbols, use_nums)
 
     # Show it in the label
     display_password.config(text=password)
@@ -47,6 +49,9 @@ uppercase_label.pack()
 
 symbol_label = tk.Checkbutton(root, text="Include Symbol", variable=use_symbol_var)
 symbol_label.pack()
+
+nums_label = tk.Checkbutton(root, text="Include Numbers", variable=use_nums_var)
+nums_label.pack()
 
 tk.Label(root, text="Your new password:").pack()
 display_password = tk.Label(root, text="", font=("Helvetica", 14))
