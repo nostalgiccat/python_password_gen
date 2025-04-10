@@ -1,5 +1,6 @@
 import tkinter as tk
 from password_generator import generate_password
+import tkinter.messagebox as messagebox
 
 root = tk.Tk()
 root.title("Password Generator")
@@ -11,17 +12,22 @@ use_nums_var = tk.BooleanVar()
 
 password_history = []
 
+MAX_LENGTH = 30
+
+
 def clear_history():
     password_history.clear()
     # Need to clear history listbox
     history_listbox.delete(0, tk.END)
+    display_password.config(text="")
+    password_label.config(text="History Cleared!")
 
 def copy_password():
     username = username_entry.get().strip()
     password = display_password.cget("text")
     root.clipboard_clear()
     root.clipboard_append(password)
-    display_password.config(text="Password Copied!")
+    password_label.config(text="Password Copied!")
 
     entry = f"{username} -> {password}"
     password_history.append(entry)
@@ -30,10 +36,18 @@ def copy_password():
 
 def generate_password_gui():
     length_str = pass_length_entry.get().strip()
+    password_label.config(text="Your new password:")
+    clipboard_button.config(state=tk.NORMAL)
 
     # Convert it to an int, with a fallback or error handling
     try:
         password_length = int(length_str)
+        if password_length < 4:
+            messagebox.showwarning("Too Short", "Password length must be at least 4.")
+            return
+        if password_length > MAX_LENGTH:
+            messagebox.showwarning("Too Long", f"Password length must be less than {MAX_LENGTH}")
+            return
     except ValueError:
         display_password.config(text="Please enter a valid number")
         return
@@ -70,7 +84,8 @@ symbol_label.pack()
 nums_label = tk.Checkbutton(root, text="Include Numbers", variable=use_nums_var)
 nums_label.pack()
 
-tk.Label(root, text="Your new password:").pack()
+password_label = tk.Label(root, text="Your new password:")
+password_label.pack()
 display_password = tk.Label(root, text="", font=("Helvetica", 14))
 display_password.pack(pady=10)
 
@@ -79,6 +94,7 @@ generate_button.pack()
 
 clipboard_button = tk.Button(root, text="Copy to Clipboard", command=copy_password)
 clipboard_button.pack()
+clipboard_button.config(state=tk.DISABLED)
 
 clear_history_button = tk.Button(root, text="Clear History", command=clear_history)
 clear_history_button.pack()
