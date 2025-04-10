@@ -11,6 +11,11 @@ use_nums_var = tk.BooleanVar()
 
 password_history = []
 
+def clear_history():
+    password_history.clear()
+    # Need to clear history listbox
+    history_listbox.delete(0, tk.END)
+
 def copy_password():
     username = username_entry.get().strip()
     password = display_password.cget("text")
@@ -74,6 +79,9 @@ generate_button.pack()
 
 clipboard_button = tk.Button(root, text="Copy to Clipboard", command=copy_password)
 clipboard_button.pack()
+
+clear_history_button = tk.Button(root, text="Clear History", command=clear_history)
+clear_history_button.pack()
 
 history_label = tk.Label(root, text="Password History:")
 history_label.pack()
