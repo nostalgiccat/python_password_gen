@@ -1,10 +1,11 @@
 import tkinter as tk
 from password_generator import generate_password
 import tkinter.messagebox as messagebox
+import csv
 
 root = tk.Tk()
 root.title("Password Generator")
-root.geometry("400x400")
+root.geometry("400x600")
 
 use_upper_var = tk.BooleanVar()
 use_symbol_var = tk.BooleanVar()
@@ -14,6 +15,17 @@ password_history = []
 
 MAX_LENGTH = 30
 
+def save_history_to_file():
+    with open("passwords.csv", "w", newline="") as file:
+        writer = csv.writer(file)
+        for entry in password_history:
+            if " -> " in entry:
+                username, password = entry.split(" -> ")
+                writer.writerow([username, password])
+
+def on_close():
+    save_history_to_file()
+    root.destroy()
 
 def clear_history():
     password_history.clear()
@@ -105,4 +117,20 @@ history_label.pack()
 history_listbox = tk.Listbox(root, width=50, height=8)
 history_listbox.pack(pady=5)
 
+root.protocol("WM_DELETE_WINDOW", on_close)
+
+def load_history_from_file():
+    try:
+        with open("passwords.csv", "r", newline="") as file:
+            reader = csv.reader(file)
+            for row in reader:
+                if len(row) == 2:
+                    username, password = row
+                    entry = f"{username} -> {password}"
+                    password_history.append(entry)
+                    history_listbox.insert(tk.END, entry)
+    except FileNotFoundError:
+        pass
+
+load_history_from_file()
 root.mainloop()
