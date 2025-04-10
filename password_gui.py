@@ -20,8 +20,12 @@ def save_history_to_file():
         writer = csv.writer(file)
         for entry in password_history:
             if " -> " in entry:
-                site, username, password = entry.split(" -> ")
-                writer.writerow([site, username, password])
+                try:
+                    userinfo, password = entry.split(" -> ")
+                    site, username = userinfo.split(" | ")
+                    writer.writerow([site, username, password])
+                except ValueError:
+                    continue #Skip malformed entries
 
 def on_close():
     save_history_to_file()
