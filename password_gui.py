@@ -20,8 +20,8 @@ def save_history_to_file():
         writer = csv.writer(file)
         for entry in password_history:
             if " -> " in entry:
-                username, password = entry.split(" -> ")
-                writer.writerow([username, password])
+                site, username, password = entry.split(" -> ")
+                writer.writerow([site, username, password])
 
 def on_close():
     save_history_to_file()
@@ -35,13 +35,14 @@ def clear_history():
     password_label.config(text="History Cleared!")
 
 def copy_password():
+    site = site_entry.get().strip()
     username = username_entry.get().strip()
     password = display_password.cget("text")
     root.clipboard_clear()
     root.clipboard_append(password)
     password_label.config(text="Password Copied!")
 
-    entry = f"{username} -> {password}"
+    entry = f"{site} | {username} -> {password}"
     password_history.append(entry)
     history_listbox.insert(tk.END, entry)
 
@@ -77,11 +78,19 @@ def generate_password_gui():
 
 
 #Labels
+#Site Label and Entry
+site_label = tk.Label(root, text="Website/App: ")
+site_label.pack()
+site_entry = tk.Entry(root)
+site_entry.pack()
+
+#Username Label and Entry
 username_label = tk.Label(root, text="Username:")
 username_label.pack()
 username_entry = tk.Entry(root)
 username_entry.pack()
 
+#Password Label and Entry
 pass_length = tk.Label(root, text="Password Length: ")
 pass_length.pack()
 pass_length_entry = tk.Entry(root)
@@ -124,9 +133,9 @@ def load_history_from_file():
         with open("passwords.csv", "r", newline="") as file:
             reader = csv.reader(file)
             for row in reader:
-                if len(row) == 2:
-                    username, password = row
-                    entry = f"{username} -> {password}"
+                if len(row) == 3:
+                    site, username, password = row
+                    entry = f"{site} | {username} -> {password}"
                     password_history.append(entry)
                     history_listbox.insert(tk.END, entry)
     except FileNotFoundError:
