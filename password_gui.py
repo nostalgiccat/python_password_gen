@@ -4,7 +4,7 @@ import tkinter.messagebox as messagebox
 import csv
 
 root = tk.Tk()
-root.title("Password Generator")
+root.title("Password Manager")
 root.geometry("400x600")
 
 use_upper_var = tk.BooleanVar()
@@ -13,7 +13,7 @@ use_nums_var = tk.BooleanVar()
 
 password_history = []
 
-MAX_LENGTH = 30
+MAX_LENGTH = 34
 
 def save_history_to_file():
     with open("passwords.csv", "w", newline="") as file:
@@ -45,6 +45,15 @@ def copy_password():
     root.clipboard_clear()
     root.clipboard_append(password)
     password_label.config(text="Password Copied!")
+
+    entry = f"{site} | {username} -> {password}"
+    password_history.append(entry)
+    history_listbox.insert(tk.END, entry)
+
+def save_password():
+    site = site_entry.get().strip()
+    username = username_entry.get().strip()
+    password = manual_password_entry.get().strip()
 
     entry = f"{site} | {username} -> {password}"
     password_history.append(entry)
@@ -94,8 +103,14 @@ username_label.pack()
 username_entry = tk.Entry(root)
 username_entry.pack()
 
+#Manual Password Label and Entry
+manual_password_label = tk.Label(root, text="Manually Enter Password: ")
+manual_password_label.pack()
+manual_password_entry = tk.Entry(root)
+manual_password_entry.pack()
+
 #Password Label and Entry
-pass_length = tk.Label(root, text="Password Length: ")
+pass_length = tk.Label(root, text="New Password Length: ")
 pass_length.pack()
 pass_length_entry = tk.Entry(root)
 pass_length_entry.pack()
@@ -114,7 +129,10 @@ password_label.pack()
 display_password = tk.Label(root, text="", font=("Helvetica", 14))
 display_password.pack(pady=10)
 
-generate_button = tk.Button(root, text="Generate Password", command=generate_password_gui)
+save_logins_button = tk.Button(root, text="Save with Existing Password", command=save_password)
+save_logins_button.pack()
+
+generate_button = tk.Button(root, text="Generate New Password", command=generate_password_gui)
 generate_button.pack()
 
 clipboard_button = tk.Button(root, text="Copy to Clipboard", command=copy_password)
