@@ -2,6 +2,7 @@ import tkinter as tk
 from password_generator import generate_password
 import tkinter.messagebox as messagebox
 import csv
+import re
 
 root = tk.Tk()
 root.title("Password Manager")
@@ -89,6 +90,25 @@ def generate_password_gui():
     # Show it in the label
     display_password.config(text=password)
 
+    # Evaluate strength
+    strength = evaluate_password(password)
+    password_strength_label.config(text=f"Strength: {strength}")
+
+def evaluate_password(pw):
+    has_upper = re.search(r'[A-Z]', pw)
+    has_lower = re.search(r'[a-z]', pw)
+    has_digit = re.search(r'\d', pw)
+    has_symbol = re.search(r'\W', pw)
+    length = len(pw)
+
+    if length >= 12 and has_upper and has_lower and has_digit and has_symbol:
+        return "Strong"
+    elif length >= 8 and has_upper and has_lower and (has_digit or has_symbol):
+        return "Moderate"
+    else:
+        return "Weak"
+
+
 
 #Labels
 #Site Label and Entry
@@ -128,6 +148,9 @@ password_label = tk.Label(root, text="Your new password:")
 password_label.pack()
 display_password = tk.Label(root, text="", font=("Helvetica", 14))
 display_password.pack(pady=10)
+
+password_strength_label = tk.Label(root, text=f"Strength: ")
+password_strength_label.pack(pady=5)
 
 save_logins_button = tk.Button(root, text="Save with Existing Password", command=save_password)
 save_logins_button.pack()
