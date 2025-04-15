@@ -92,7 +92,14 @@ def generate_password_gui():
 
     # Evaluate strength
     strength = evaluate_password(password)
+
     password_strength_label.config(text=f"Strength: {strength}")
+    if strength == "Weak":
+        password_strength_label.config(fg="Red")
+    elif strength == "Moderate":
+        password_strength_label.config(fg="Yellow")
+    elif strength == "Strong":
+        password_strength_label.config(fg="Light Green")
 
 def evaluate_password(pw):
     has_upper = re.search(r'[A-Z]', pw)
@@ -107,7 +114,6 @@ def evaluate_password(pw):
         return "Moderate"
     else:
         return "Weak"
-
 
 
 #Labels
